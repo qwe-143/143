@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char data[100], key[30], temp[100];
+    int i, j, n, k;
+
+    printf("Enter data: ");
+    scanf("%s", data);
+
+    printf("Enter key: ");
+    scanf("%s", key);
+
+    n = strlen(data);
+    k = strlen(key);
+
+    for(i = 0; i < k-1; i++)
+        data[n+i] = '0';
+
+    data[n+k-1] = '\0';
+    strcpy(temp, data);
+
+    for(i = 0; i < n; i++) {
+        if(temp[i] == '1') {
+            for(j = 0; j < k; j++)
+                temp[i+j] = (temp[i+j] == key[j]) ? '0' : '1';
+        }
+    }
+
+    printf("CRC: ");
+    for(i = n; i < n+k-1; i++)
+        printf("%c", temp[i]);
+
+    printf("\n");
+
+    return 0;
+}
