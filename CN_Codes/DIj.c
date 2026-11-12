@@ -1,61 +1,50 @@
-
 #include <stdio.h>
-#define INF 999999
+#define INF 999
 
 int main() {
-    int n, src;
+    int n, src, des, i, j, u;
 
-    printf("Enter number of vertices: ");
+    printf("Enter vertices: ");
     scanf("%d", &n);
 
-    int graph[n][n], dist[n], visited[n];
+    int g[n][n], d[n], v[n];
 
     printf("Enter adjacency matrix:\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            scanf("%d", &graph[i][j]);
-        }
+    for(i=0;i<n;i++)
+        for(j=0;j<n;j++)
+            scanf("%d", &g[i][j]);
+
+    printf("Enter source and destination: ");
+    scanf("%d%d", &src, &des);
+
+    for(i=0;i<n;i++) {
+        d[i] = INF;
+        v[i] = 0;
     }
 
-    printf("Enter source vertex: ");
-    scanf("%d", &src);
+    d[src] = 0;
 
-    for (int i = 0; i < n; i++) {
-        dist[i] = INF;
-        visited[i] = 0;
-    }
+    for(i=0;i<n-1;i++) {
+        u = -1;
 
-    dist[src] = 0;
+        for(j=0;j<n;j++)
+            if(!v[j] && (u==-1 || d[j]<d[u]))
+                u = j;
 
-    for (int count = 0; count < n - 1; count++) {
-        int u = -1;
-
-        for (int i = 0; i < n; i++) {
-            if (!visited[i] &&
-                (u == -1 || dist[i] < dist[u]))
-                u = i;
-        }
-
-        if (u == -1 || dist[u] == INF)
+        if(u==-1 || d[u]==INF)
             break;
 
-        visited[u] = 1;
+        v[u] = 1;
 
-        for (int v = 0; v < n; v++) {
-            if (!visited[v] && graph[u][v] != 0 &&
-                dist[u] + graph[u][v] < dist[v]) {
-                dist[v] = dist[u] + graph[u][v];
-            }
-        }
+        for(j=0;j<n;j++)
+            if(g[u][j] && !v[j] && d[u]+g[u][j]<d[j])
+                d[j] = d[u]+g[u][j];
     }
 
-    printf("Shortest distances:\n");
-    for (int i = 0; i < n; i++) {
-        if (dist[i] == INF)
-            printf("%d -> %d = Unreachable\n", src, i);
-        else
-            printf("%d -> %d = %d\n", src, i, dist[i]);
-    }
+    if(d[des]==INF)
+        printf("No path exists");
+    else
+        printf("Shortest distance = %d", d[des]);
 
     return 0;
 }
